@@ -25,7 +25,7 @@ public class RobotSimulator {
 			        case "I":
 			            int size = Integer.parseInt(sc.nextLine());
 			            floor = new int[size][size];
-//                    x = y = 0;
+
 			            penDown = false;
 			            facing = 0;
 			            break;
@@ -60,15 +60,16 @@ public class RobotSimulator {
 			
 		} catch (Exception e) {
 			
-			System.out.println("Please provide valid number for the floor size ");
+			System.out.println("Please provide valid number for floor size ");
 		}
     }
     
     private static void printFloor() {
     	System.out.println("Displaying the Floor:");
-        for (int i = floor[0].length-2; i >= 0; i--) {
-            for (int j = 0; j < floor.length-1; j++) {
-                    System.out.print(floor[i][j] == 1 ? "* ": " ");
+    	for (int i = floor[0].length - 1; i >= 0; i--) {
+        	
+            for (int j = 0; j <floor.length ; j++) {
+                System.out.print(floor[i][j] == 1 ? "* " : "  ");
             }
             System.out.println();
         }
@@ -109,11 +110,11 @@ public class RobotSimulator {
 			                 break;
 			         }
 			     }
-			 }
-		} catch (Exception e) {
+			 } 
+				 
+    	 } catch (Exception e) {
 			
 			System.out.println("INVALID MOVE : ROBOT IS OUTSIDE OF THE FLOOR");
 		}  
     }
 }
-            
