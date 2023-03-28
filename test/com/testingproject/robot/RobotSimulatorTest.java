@@ -4,6 +4,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -126,7 +129,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 		        RobotSimulator.facing =3;
 		        assertFalse(RobotSimulator.moveWest(4));
 		        assertEquals(0, RobotSimulator.x);
-		    } 
+		    }  
 		    
 		    @Test
 			 @Order(17)
@@ -145,21 +148,20 @@ import org.junit.jupiter.api.TestMethodOrder;
 			        Assertions.assertEquals(8, RobotSimulator.x);
 			
 			    }
-// 
-//		    
-//		    @Test
-//		    @Order(13)
-//		    public void testPrintFloorEmpty() {
-//		        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-//		        System.setOut(new PrintStream(outContent));
-//		        
-//		        RobotSimulator.floor = new int[10][10]; // Empty floor
-//		        
-//		        RobotSimulator.printFloor();
-//		        
-//		        String expectedOutput = "Displaying the Floor:\n          \n          \n          \n          \n          \n          \n          \n          \n          \n          \n";
-//		        Assertions.assertFalse(outContent.toString().equals(expectedOutput));
-//		    }  
+	    
+		    @Test
+		    @Order(13) 
+		    public void testPrintFloorEmpty() {
+		        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+		        System.setOut(new PrintStream(outContent));
+		        
+		        RobotSimulator.floor = new int[10][10]; // Empty floor
+		        
+		        RobotSimulator.printFloor();
+		        
+		        String expectedOutput = "Displaying the Floor:\n          \n          \n          \n          \n          \n          \n          \n          \n          \n          \n";
+		        Assertions.assertFalse(outContent.toString().equals(expectedOutput));
+		    }  
 //			
 //			
 //			  @Test
@@ -228,3 +230,34 @@ import org.junit.jupiter.api.TestMethodOrder;
 			
 		    
 	}
+		    
+		    
+		    
+		    
+		    
+		    
+		    
+		    
+		    
+		    
+		    
+		    
+		    
+		    
+		    
+		    
+		    
+		    
+		    
+		    
+		    
+		    
+		    
+		
+			
+
+
+		  
+		
+
+	

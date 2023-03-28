@@ -124,7 +124,7 @@ public class RobotSimulator {
 		}
 		x += steps;
 		return true;
-
+  
 	}
 
 	public static boolean moveSouth(int steps) {
@@ -176,7 +176,7 @@ public class RobotSimulator {
 				case 0:
 					floor[y - i][x] = 1;
 					break;
-				case 1: 
+				case 1:  
 					floor[y][x - i] = 1;
 					break;
 				case 2:
@@ -196,8 +196,3 @@ public class RobotSimulator {
 
 	}
 }
-
-
-
-
-
