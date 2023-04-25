@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RobotSimulator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">maven-testing</a> &gt; <a href="index.source.html" class="el_package">robotsimulator.test</a> &gt; <span class="el_source">RobotSimulator.java</span></div><h1>RobotSimulator.java</h1><pre class="source lang-java linenums">package robotsimulator.test;
+
+import java.util.ArrayList;
+import java.util.Scanner;
+  
+<span class="nc" id="L6">public class RobotSimulator {</span>
+	static int[][] floor;
+	static int x, y;
+	public static boolean penDown;
+	static int facing; // 0: north, 1: east, 2: south, 3: west
+	static final int MAX_SIZE = 100;
+	static int size;
+<span class="fc" id="L13">	private static ArrayList&lt;String&gt; commandHistory = new ArrayList&lt;String&gt;();</span>
+	
+	public static void main(String[] args) {
+<span class="nc" id="L16">		System.out.print(&quot;Welcome to RobotSimulator!!!\n&quot;</span>
+				+ &quot;Use below commands!!!\n&quot;
+				+ &quot;[1] U or u     =&gt; Pen up\r\n&quot;
+				+ &quot;[2] D or d     =&gt; Pen down\r\n&quot;
+				+ &quot;[3] R or r     =&gt; Turn right\r\n&quot;
+				+ &quot;[4] L or l     =&gt; Turn left\r\n&quot;
+				+ &quot;[5] M s or m s =&gt; Move forward s spaces (s is a non-negative integer)\r\n&quot;
+				+ &quot;[6] P or p     =&gt; Print the floor mapped\r\n&quot;
+				+ &quot;[7] C or c     =&gt; Print current position of the pen and whether it is up or down and its facing direction\r\n&quot;
+				+ &quot;[8] Q or q     =&gt; Stop the program\r\n&quot;
+				+ &quot;[9]I n or i n  =&gt; Initialize the system: The values of the array floor are zeros and the robot\r\n&quot;
+				+ &quot;                  is back to [0, 0], pen up and facing north. x size of the array, an integer greater than zero\r\n&quot;           
+				+ &quot;[10] H or h    =&gt; Show all commands entered\n&quot;);
+<span class="nc" id="L29">		System.out.print(&quot;Enter command: &quot;);</span>
+<span class="nc" id="L30">		RobotSimulator.input();</span>
+<span class="nc" id="L31">	}</span>
+
+	public static void input() {  
+		try {
+<span class="fc" id="L35">		Scanner sc = new Scanner(System.in);</span>
+<span class="fc" id="L36">		String command = sc.nextLine();</span>
+<span class="fc" id="L37">		char firstchar = command.charAt(0);</span>
+<span class="pc bpc" id="L38" title="1 of 4 branches missed.">			while (!((firstchar =='q')|| (firstchar =='Q'))) {</span>
+<span class="fc bfc" id="L39" title="All 10 branches covered.">			switch (firstchar) {</span>
+			case 'i':
+			case 'I':
+				try {
+<span class="fc" id="L43">					size = Integer.parseInt(command.substring(2).trim());</span>
+<span class="fc bfc" id="L44" title="All 4 branches covered.">					if (size &lt; 1 || size &gt; 100) {</span>
+<span class="fc" id="L45">						throw new IllegalArgumentException(&quot;Please provide a valid number for floor size (1-100).&quot;);</span>
+					}
+<span class="fc" id="L47">					initializeFloor(size);</span>
+<span class="fc" id="L48">					commandHistory.add(command);</span>
+<span class="fc" id="L49">					break;  </span>
+<span class="fc" id="L50">				} catch (NumberFormatException e) {</span>
+<span class="fc" id="L51">					System.out.println(&quot;Invalid input. Please enter a number.&quot;);</span>
+<span class="fc" id="L52">				} catch (IllegalArgumentException e) {</span>
+<span class="fc" id="L53">					System.out.println(e.getMessage());</span>
+<span class="fc" id="L54">				}</span>
+<span class="fc" id="L55">				break;</span>
+			case 'c':
+			case 'C': 
+<span class="fc" id="L58">				String temp = command.substring(1).trim();</span>
+<span class="fc bfc" id="L59" title="All 2 branches covered.">				if(temp.length() &gt; 0) {</span>
+<span class="fc" id="L60">					System.out.println(&quot;Invalid command!! Enter Valid command again&quot;);</span>
+<span class="fc" id="L61">					break;</span>
+				}
+<span class="fc" id="L63">				commandHistory.add(command);</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">				System.out.println(&quot;Position: (&quot; + x + &quot;, &quot; + y + &quot;) - Pen: &quot; + (penDown ? &quot;down&quot; : &quot;up&quot;) + &quot; - Facing: &quot;</span>
+<span class="fc bfc" id="L65" title="All 6 branches covered.">						+ (facing == 0 ? &quot;north&quot; : facing == 1 ? &quot;east&quot; : facing == 2 ? &quot;south&quot; : &quot;west&quot;));</span>
+<span class="fc" id="L66">				break;</span>
+			case 'd':
+			case 'D':
+<span class="fc" id="L69">				String temp1 = command.substring(1).trim();</span>
+<span class="fc bfc" id="L70" title="All 2 branches covered.">				if(temp1.length() &gt; 0) {</span>
+<span class="fc" id="L71">					System.out.println(&quot;Invalid command!! Enter Valid command again&quot;);</span>
+<span class="fc" id="L72">					break;</span>
+				}
+<span class="fc" id="L74">				commandHistory.add(command);</span>
+<span class="fc" id="L75">				penD();</span>
+<span class="fc" id="L76">				break;</span>
+			case 'u':
+			case 'U':
+<span class="fc" id="L79">				String temp2 = command.substring(1).trim();</span>
+<span class="fc bfc" id="L80" title="All 2 branches covered.">				if(temp2.length() &gt; 0) {</span>
+<span class="fc" id="L81">					System.out.println(&quot;Invalid command!! Enter Valid command again&quot;);</span>
+<span class="fc" id="L82">					break;</span>
+				}
+<span class="fc" id="L84">				commandHistory.add(command);</span>
+<span class="fc" id="L85">				penU();</span>
+<span class="fc" id="L86">				break;</span>
+			case 'm':
+			case 'M': 
+<span class="fc" id="L89">				commandHistory.add(command);</span>
+				try{
+<span class="fc" id="L91">					int steps = Integer.parseInt(command.substring(2).trim());</span>
+<span class="fc bfc" id="L92" title="All 2 branches covered.">					if(steps&lt;0) {</span>
+<span class="fc" id="L93">						throw new IllegalArgumentException(&quot;Invalid steps!! Provide integer value for steps.&quot;);</span>
+					}
+<span class="fc" id="L95">					move(steps);</span>
+<span class="fc" id="L96">					break;</span>
+<span class="fc" id="L97">				}catch (NumberFormatException e) {</span>
+<span class="fc" id="L98">		            System.out.println(&quot;Invalid input. Please enter a integer number.&quot;);</span>
+<span class="fc" id="L99">				} catch (IllegalArgumentException e) {</span>
+<span class="fc" id="L100">			        System.out.println(e.getMessage());</span>
+<span class="fc" id="L101">				}</span>
+<span class="fc" id="L102">				break;</span>
+			case 'r':
+			case 'R':
+<span class="fc" id="L105">				String temp3 = command.substring(1).trim();</span>
+<span class="fc bfc" id="L106" title="All 2 branches covered.">				if(temp3.length() &gt; 0) {</span>
+<span class="fc" id="L107">					System.out.println(&quot;Invalid command!! Enter Valid command again&quot;);</span>
+<span class="fc" id="L108">					break;</span>
+				}
+<span class="fc" id="L110">				commandHistory.add(command);</span>
+<span class="fc" id="L111">				turnRight();</span>
+<span class="fc" id="L112">				break;</span>
+			case 'l':
+			case 'L':
+<span class="fc" id="L115">				String temp4 = command.substring(1).trim();</span>
+<span class="fc bfc" id="L116" title="All 2 branches covered.">				if(temp4.length() &gt; 0) {</span>
+<span class="fc" id="L117">					System.out.println(&quot;Invalid command!! Enter Valid command again&quot;);</span>
+<span class="fc" id="L118">					break;</span>
+				}
+<span class="fc" id="L120">				commandHistory.add(command);</span>
+<span class="fc" id="L121">				turnLeft();</span>
+<span class="fc" id="L122">				break;</span>
+			case 'p':
+			case 'P':
+<span class="fc" id="L125">				String temp5 = command.substring(1).trim();</span>
+<span class="fc bfc" id="L126" title="All 2 branches covered.">			    if(temp5.length() &gt; 0) {</span>
+<span class="fc" id="L127">				System.out.println(&quot;Invalid command!! Enter Valid command again&quot;);</span>
+<span class="fc" id="L128">				break;</span>
+			}
+<span class="fc" id="L130">				commandHistory.add(command);</span>
+<span class="fc" id="L131">				 System.out.println(printFloor());</span>
+<span class="fc" id="L132">				break;</span>
+			case 'h':
+			case 'H':
+<span class="fc" id="L135">				String temp6 = command.substring(1).trim();</span>
+<span class="fc bfc" id="L136" title="All 2 branches covered.">				if(temp6.length() &gt; 0) {</span>
+<span class="fc" id="L137">					System.out.println(&quot;Invalid command!! Enter Valid command again&quot;);</span>
+<span class="fc" id="L138">					break;</span>
+				}
+<span class="fc" id="L140">				commandHistory.add(command);</span>
+<span class="fc" id="L141">				System.out.println(printCommandHistory());</span>
+<span class="fc" id="L142">				break;</span>
+			default:
+<span class="fc" id="L144">				System.out.println(&quot;Invalid command!! Enter Valid command again&quot;);</span>
+			}
+<span class="fc" id="L146">			System.out.print(&quot;Enter command: &quot;);</span>
+<span class="fc" id="L147">			command = sc.nextLine();</span>
+<span class="fc" id="L148">			firstchar = command.charAt(0);</span>
+		}
+<span class="fc" id="L150">		commandHistory.clear();</span>
+<span class="fc" id="L151">		System.out.println(&quot;Robot is turn off&quot;);</span>
+		
+<span class="fc" id="L153">	} catch(Exception e) {</span>
+		//commandHistory.clear();
+<span class="fc" id="L155">		System.out.println(&quot;Wrong input!&quot; + e.getMessage());</span>
+		
+<span class="fc" id="L157">	}</span>
+<span class="fc" id="L158">}</span>
+	
+	public static void initializeFloor(int size) {
+<span class="fc" id="L161">	            floor = new int[size][size];</span>
+<span class="fc" id="L162">	            penDown = false;</span>
+<span class="fc" id="L163">				x = 0;</span>
+<span class="fc" id="L164">				y = 0;</span>
+<span class="fc" id="L165">				facing = 0;</span>
+<span class="fc" id="L166">	}</span>
+
+	static int turnRight() {
+<span class="fc" id="L169">		return facing = (facing + 1) % 4;</span>
+	}
+
+	static int turnLeft() {
+<span class="fc" id="L173">		return facing = (facing + 3) % 4;</span>
+	}
+
+	static boolean penD() {
+<span class="fc" id="L177">		return penDown = true;</span>
+	}
+
+	static boolean penU() {
+<span class="fc" id="L181">		return penDown = false;</span>
+	}
+	
+	static boolean moveNorth(int steps) {
+<span class="fc" id="L185">			int current = y + steps;</span>
+<span class="pc bpc" id="L186" title="1 of 4 branches missed.">			        if (current &gt;= size || current &lt; 0) {</span>
+<span class="fc" id="L187">				System.out.println(&quot;Invalid move!! Robot can't move outside of the floor. Please provide valid move.&quot;);</span>
+<span class="fc" id="L188">				return false;</span>
+			}
+<span class="fc" id="L190">			y += steps;</span>
+<span class="fc" id="L191">			return true;</span>
+
+		}
+	
+	public static boolean moveEast(int steps) {
+<span class="fc" id="L196">		int current = x + steps;</span>
+<span class="fc bfc" id="L197" title="All 4 branches covered.">		         if (current &gt;= size || current &lt; 0) {</span>
+<span class="fc" id="L198">			System.out.println(&quot;Invalid move!! Robot can't move outside of the floor. Please provide valid move.&quot;);</span>
+<span class="fc" id="L199">			return false;</span>
+		}
+<span class="fc" id="L201">		x += steps;</span>
+<span class="fc" id="L202">		return true;</span>
+   
+	}
+
+
+	public static boolean moveSouth(int steps) {
+<span class="fc" id="L208">		int current = y - steps;</span>
+<span class="pc bpc" id="L209" title="1 of 4 branches missed.">		         if (current &gt;= size || current &lt; 0) {</span>
+<span class="fc" id="L210">			System.out.println(&quot;Invalid move!! Robot can't move outside of the floor. Please provide valid move.&quot;);</span>
+<span class="fc" id="L211">			return false;</span>
+		}
+<span class="fc" id="L213">		y = y - steps;</span>
+<span class="fc" id="L214">		return true;</span>
+
+	}
+
+	public static boolean moveWest(int steps) {
+<span class="fc" id="L219">		int current = x - steps;</span>
+<span class="pc bpc" id="L220" title="1 of 4 branches missed.">		if (current &gt;= size || current &lt; 0) {</span>
+<span class="fc" id="L221">			System.out.println(&quot;Invalid move!! Robot can't move outside of the floor. Please provide valid move.&quot;);</span>
+<span class="fc" id="L222">			return false;</span>
+		}
+<span class="fc" id="L224">		x -= steps;</span>
+<span class="fc" id="L225">		return true;</span>
+	}
+	
+	public static void move(int steps) {
+	   
+<span class="fc" id="L230">	        boolean status = true;</span>
+<span class="pc bpc" id="L231" title="1 of 5 branches missed.">	                switch (facing) {</span>
+	            case 0:
+<span class="fc" id="L233">	                status = moveNorth(steps);</span>
+<span class="fc" id="L234">	                break;</span>
+	            case 1:
+<span class="fc" id="L236">	                status = moveEast(steps);</span>
+<span class="fc" id="L237">	                break;  </span>
+	            case 2:
+<span class="fc" id="L239">	                status = moveSouth(steps);</span>
+<span class="fc" id="L240">	                break; </span>
+	            case 3:
+<span class="fc" id="L242">	                status = moveWest(steps);</span>
+	                break;
+	        }
+<span class="fc bfc" id="L245" title="All 2 branches covered.">	        if (!status) {</span>
+<span class="fc" id="L246">	            return;</span>
+	        }
+<span class="fc bfc" id="L248" title="All 2 branches covered.">	        if (penDown) {</span>
+<span class="fc bfc" id="L249" title="All 2 branches covered.">	            for (int i = 0; i &lt;=steps; i++) {</span>
+<span class="pc bpc" id="L250" title="1 of 5 branches missed.">	                    switch (facing) {</span>
+	                    case 0:
+<span class="fc" id="L252">	                        floor[y - i][x] = 1;</span>
+<span class="fc" id="L253">	                        break;</span>
+	                    case 1:
+<span class="fc" id="L255">	                        floor[y][x - i] = 1;</span>
+<span class="fc" id="L256">	                        break;</span>
+	                    case 2:
+<span class="fc" id="L258">	                        floor[y + i][x] = 1;</span>
+<span class="fc" id="L259">	                        break;</span>
+	                    case 3:
+<span class="fc" id="L261">	                        floor[y][x + i] = 1;</span>
+	                        break;
+	                }
+	            }
+	        }
+<span class="fc" id="L266">	}</span>
+	
+	public static String printCommandHistory() {
+<span class="fc" id="L269">	    StringBuilder sb = new StringBuilder();</span>
+<span class="fc" id="L270">	        sb.append(&quot;Command history:\n&quot;); </span>
+<span class="fc bfc" id="L271" title="All 2 branches covered.">	        for (String command : commandHistory) {</span>
+<span class="fc" id="L272">	            sb.append(&quot;- &quot;).append(command).append(&quot;\n&quot;);</span>
+<span class="fc" id="L273">	        }</span>
+<span class="fc" id="L274">	    return sb.toString();</span>
+	}
+	
+	public static String printFloor() { 
+<span class="fc" id="L278">	    StringBuilder sb = new StringBuilder();</span>
+<span class="fc" id="L279">	    sb.append(&quot;Displaying the Floor:\n&quot;);</span>
+<span class="fc bfc" id="L280" title="All 2 branches covered.">	    for (int i = floor[0].length - 1; i &gt;= 0; i--) {</span>
+<span class="fc bfc" id="L281" title="All 2 branches covered.">	        for (int j = 0; j &lt; floor.length; j++) {</span>
+<span class="fc bfc" id="L282" title="All 2 branches covered.">	            sb.append(floor[i][j] == 1 ? &quot;* &quot; : &quot;  &quot;);</span>
+	        }
+<span class="fc" id="L284">	        sb.append(&quot;\n&quot;);</span>
+	    }
+<span class="fc" id="L286">	    return sb.toString();</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
